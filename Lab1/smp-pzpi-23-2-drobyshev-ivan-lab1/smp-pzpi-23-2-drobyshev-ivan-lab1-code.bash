@@ -110,7 +110,7 @@ BEGIN {
 }
 function ft(t){
   gsub(/:|"/," ",t);
-  return strftime("%I:%M %p", mktime(1970" 01 01 " t));
+  return strftime("%I:%M %p", mktime("1970 01 01" t));
 }
 function fd(d){
   gsub(/"/, "", d);

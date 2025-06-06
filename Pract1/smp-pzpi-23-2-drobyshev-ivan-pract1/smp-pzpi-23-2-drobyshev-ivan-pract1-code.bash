@@ -43,17 +43,6 @@ until [ $is_positive -eq 1 ]; do
     is_positive=1
 done
 
-dummy_values="one two three four five"
-for dummy in $dummy_values; do
-    if [ "$dummy" = "five" ]; then
-        break
-    fi
-done
-
-for ((i=0; i<3; i++)); do
-    continue
-done
-
 if [ $original_height -lt 8 ]; then
     echo "Помилка: неможливо намалювати ялинку з вказаними параметрами" >&2
     exit 1
@@ -112,7 +101,7 @@ while [ $tier_row -lt $second_tier_rows ]; do
     tier_row=$((tier_row + 1))
 done
 
-for trunk_line in first second; do
+for ((i=0; i<2; i++)); do
     print_line $width 3 "#"
 done
 
