@@ -1,0 +1,442 @@
+Харківський національний університет радіоелектроніки
+Факультет комп’ютерних наук
+Катедра програмної інженерії 
+ 
+  
+
+Звіт
+з лабораторної роботи № 3
+з дисципліни «Скриптові мови програмування»
+
+
+
+
+
+
+Виконав:
+ст. гр. ПЗПІ-23-2
+Дробишев І. С. Перевірив
+ст. викладач катедри ПІ
+Сокорчук І. П.
+ 
+Харків 2025
+1 ІСТОРІЯ ЗМІН
+
+№ 	Дата	       Версія звіту   	Опис змін та виправлень
+1 	28.05.2025	 0.1	            Створено такі розділи: "Завдання", "Опис виконаної роботи", "Висновки". Були оформлені додатки
+
+
+2 ЗАВДАННЯ
+     
+     Завдання лабораторної роботи полягає в створенні робочого сайту з інтернет-магазином. Він має складатися з таких розділів: 
+     1. Сторінка товарів. 
+     2. Сторінка «Кошик». 
+     Кожна сторінка має складатися з таких частин: 
+     1. «Шапка» сторінки. 
+     2. Тіло сторінки. 
+     3. «Підвал» або Footer сторінки. 
+     На сторінці товарів необхідно відобразити список доступних для покупки найменувань з можливістю вибрати кількість одиниць товарів і кнопкою «купити». 
+     Під час натискання на кнопку «купити», має відправлятися запит (відправка форми, методом POST) на сервер, де дані зберігаються в сесію. 
+     На сторінці «Кошик» необхідно відобразити список обраних користувачем товарів (які були збережені у сесію). 
+     Якщо користувач не обрав жодного товару, то має бути відображений напис «Перейти до покупок» (посилання)
+
+3 ОПИС ВИКОНАНОЇ РОБОТИ
+
+     Проєкт організовано у вигляді набору взаємопов'язаних PHP-скриптів та CSS-стилів, розділених за функціональним призначенням:
+     * index.php — головна сторінка магазину з привітанням та посиланням на каталог(див. додаток Б.8)
+     * products.php — сторінка каталогу товарів з формою для вибору кількості
+     * basket.php — сторінка кошика з можливістю оплати
+     * includes/functions.php — модуль з бізнес-логікою та допоміжними функціями
+     * includes/header.php та footer.php — шапка та підвал сторінки
+     * data/productsDB.php — модуль роботи з базою даних SQLite
+     * style.css — стилі для оформлення інтерфейсу
+     База даних SQLite (products.db) містить таблицю products з полями id, name та price. При першому запуску система автоматично створює БД та заповнює її початковим набором товарів.
+     У модулі productsDB.php(див. додаток Б.1) реалізовано роботу з базою даних. Створюється з'єднання через PDO з налаштуванням режиму обробки помилок. При відсутності файлу БД автоматично створюється таблиця та додаються тестові товари.
+     Модуль functions.php(див. додаток Б.2) містить набір функцій для роботи з товарами та кошиком:
+     * getProducts() — отримує список товарів з БД через PDO
+     * getCart() — повертає вміст кошика з сесії
+     * addToCart() — додає товар у кошик з перевіркою наявності
+     * removeFromCart() — видаляє товар з кошика
+     * clearCart() — очищає кошик після оплати
+     * validateCount() — перевіряє коректність кількості товару
+     * findProducts() — знаходить продукт по ID
+     На сторінці products.php(див. додаток Б.3) реалізовано форму для вибору товарів. Користувач може вказати кількість для кожного товару. Валідація перевіряє, що кількість не перевищує 100 одиниць. При відправці форми товари додаються в кошик через addToCart().
+     Сторінка basket.php(див. додаток Б.4) відображає вміст кошика у вигляді таблиці з колонками: ID, назва, ціна, кількість, сума. Реалізовано можливість видалення окремих товарів. При натисканні кнопки "Оплатити" викликається clearCart() та показується повідомлення про успішну покупку.
+     Для забезпечення безпеки використано:
+     * екранування виводу через htmlspecialchars()
+     * валідацію вхідних даних
+     * перевірку наявності даних через isset()
+     Інтерфейс оформлено за допомогою CSS-стилів для забезпечення зручності користування(див. додаток Б.5). Реалізовано адаптивний дизайн таблиць, форм та кнопок. Додано стилізацію повідомлень про помилки та успішні дії.
+     Реалізована шапка(див. додаток Б.6) та підвал для сторінок(див. додаток Б.7) з посиланнями на інші сторінки
+     Система використовує сесії PHP для зберігання стану кошика між запитами. Це дозволяє зберігати вибрані товари навіть при оновленні сторінки або переході між розділами сайту.
+     
+
+4 ВИСНОВКИ
+
+     Під час виконання лабораторної роботи було створено робочий сайт з інтернет магазином. Створено сторінку товарів з відображенням товарів які зберігаються в БД SQLite, сторінку кошик, де відображаються додані користувачем товари, які в свою чергу зберігаються в сесії.
+
+
+ДОДАТОК А
+Відеозапис
+
+Відеозапис презентації результатів лабораторної роботи: https://youtu.be/Ve_Y0gvszaA
+
+Хронологічний опис відеозапису:
+00:00 - Вступ
+00:06 - Конфігурація БД 
+01:04 - Огляд footer.php, functions.php(Основних функцій застосунку), header.php
+03:21 - Огляд сторінки basket.php на якій відбувається обробка оплати
+04:55 - Огляд головної сторінки index.php та сторінки products.php
+06:02 - Демонстрація роботи програми
+
+ДОДАТОК Б
+Програмний код
+Б.1 Файл productsDB.php
+
+GitHub репозиторій: https://github.com/NureDrobyshevIvan/smp-pzpi-23-2-drobyshev-ivan/blob/main/Lab3/smp-pzpi-23-2-drobyshev-ivan-lab3/data/productsDB.php
+
+        1 <?php
+        2 $dbFile = __DIR__ . '/products.db';
+        3
+        4 if (!file_exists($dbFile)) {
+        5     $pdo = new PDO('sqlite:' . $dbFile);
+        6     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        7
+        8     $pdo->exec("CREATE TABLE products (
+        9         id INTEGER PRIMARY KEY AUTOINCREMENT,
+       10         name TEXT NOT NULL,
+       11         price INTEGER NOT NULL
+       12     )");
+       13
+       14     $products = [
+       15         ['name' => 'Молоко пастеризоване', 'price' => 12],
+       16         ['name' => 'Сир білий', 'price' => 21],
+       17         ['name' => 'Яйця курячі', 'price' => 7],
+       18         ['name' => 'Кефір', 'price' => 15],
+       19         ['name' => 'Сметана', 'price' => 18],
+       20         ['name' => 'Масло вершкове', 'price' => 35],
+       21         ['name' => 'Йогурт натуральний', 'price' => 14],
+       22         ['name' => 'Сир твердий', 'price' => 45],
+       23         ['name' => 'Ряжанка', 'price' => 13],
+       24         ['name' => 'Вершки', 'price' => 22]
+       25     ];
+       26
+       27     $stmt = $pdo->prepare("INSERT INTO products (name, price) VALUES (?, ?)");
+       28     foreach ($products as $p) {
+       29         $stmt->execute([$p['name'], $p['price']]);
+       30     }
+       31 } else {
+       32     $pdo = new PDO('sqlite:' . $dbFile);
+       33     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+       34 }
+
+Б.2 Файл functions.php
+
+GitHub репозиторій: https://github.com/NureDrobyshevIvan/smp-pzpi-23-2-drobyshev-ivan/blob/main/Lab3/smp-pzpi-23-2-drobyshev-ivan-lab3/includes/functions.php
+
+        1 <?php
+        2 session_start();
+        3
+        4 function getProducts() {
+        5     require_once __DIR__ . '/../data/productsDB.php';
+        6     $products = [];
+        7     $stmt = $pdo->query("SELECT id, name, price FROM products");
+        8     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        9         $products[$row['id']] = $row;
+       10     }
+       11     return $products;
+       12 }
+       13
+       14 function getCart() {
+       15     return $_SESSION['cart'] ?? [];
+       16 }
+       17
+       18 function addToCart($id, $count) {
+       19     if (!isset($_SESSION['cart'])) {
+       20         $_SESSION['cart'] = [];
+       21     }
+       22     $found = false;
+       23     foreach ($_SESSION['cart'] as &$item) {
+       24         if ($item['id'] == $id) {
+       25             $item['count'] += $count;
+       26             $found = true;
+       27             break;
+       28         }
+       29     }
+       30     if (!$found) {
+       31         $_SESSION['cart'][] = ['id' => $id, 'count' => $count];
+       32     }
+       33 }
+       34
+       35 function removeFromCart($id) {
+       36     if (!isset($_SESSION['cart'])) return;
+       37
+       38     $newCart = [];
+       39     foreach ($_SESSION['cart'] as $item) {
+       40         if ($item['id'] != $id) {
+       41             $newCart[] = $item;
+       42         }
+       43     }
+       44     $_SESSION['cart'] = $newCart;
+       45 }
+       46
+       47 function clearCart() {
+       48     unset($_SESSION['cart']);
+       49 }
+       50
+       51 function validateCount($count) {
+       52     return is_numeric($count) && $count > 0 && $count <= 100;
+       53 }
+       54
+       55 function findProduct($id, $products) {
+       56     foreach ($products as $p) {
+       57         if ($p['id'] == $id) return $p;
+       58     }
+       59     return null;
+       60 }
+
+Б.3 Файл products.php
+
+GitHub репозиторій: https://github.com/NureDrobyshevIvan/smp-pzpi-23-2-drobyshev-ivan/blob/main/Lab3/smp-pzpi-23-2-drobyshev-ivan-lab3/products.php
+
+        1 <?php
+        2 include __DIR__ . '/includes/functions.php';
+        3 $products = getProducts();
+        4 
+        5 $error = '';
+        6 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        7     foreach ($products as $product) {
+        8         $count = $_POST['count_' . $product['id']] ?? 0;
+        9         if ($count > 0) {
+       10             if (!validateCount($count)) {
+       11                 $error = 'Перевірте будь ласка введені дані. Кількість товару не може бути більшою за 100';
+       12                 break;
+       13             }
+       14             addToCart($product['id'], (int)$count);
+       15         }
+       16     }
+       17     if (!$error) {
+       18         header('Location: basket.php');
+       19         exit;
+       20     }
+       21 }
+       22 include __DIR__ . '/includes/header.php';
+       23 ?>
+       24 <div class="main-content">
+       25     <h2>Продукти</h2>
+       26     <form method="POST" action="">
+       27         <table>
+       28             <?php foreach ($products as $product): ?>
+       29             <tr>
+       30                 <td><b><?= htmlspecialchars($product['name']) ?></b></td>
+       31                 <td><input type="number" name="count_<?= $product['id'] ?>" value="0" min="0" max="100"></td>
+       32                 <td>$<?= $product['price'] ?></td>
+       33             </tr>
+       34             <?php endforeach; ?>
+       35         </table>
+       36         <div class="button-center">
+       37             <button type="submit">Додати в кошик</button>
+       38         </div>
+       39     </form>
+       40     <?php if ($error): ?>
+       41         <div style="color:red;"> <?= $error ?> </div>
+       42     <?php endif; ?>
+       43 </div>
+       44 <?php include __DIR__ . '/includes/footer.php'; ?>
+
+Б.4 Файл basket.php
+
+GitHub репозиторій: https://github.com/NureDrobyshevIvan/smp-pzpi-23-2-drobyshev-ivan/blob/main/Lab3/smp-pzpi-23-2-drobyshev-ivan-lab3/basket.php
+
+        1 <?php
+        2 include __DIR__ . '/includes/functions.php';
+        3 $products = getProducts();
+        4 $cart = getCart();
+        5
+        6 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
+        7     removeFromCart((int)$_POST['remove']);
+        8     header('Location: basket.php');
+        9     exit;
+       10 }
+       11
+       12 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
+       13     clearCart();
+       14     $paid = true;
+       15 }
+       16
+       17 include __DIR__ . '/includes/header.php';
+       18 ?>
+       19 <div class="main-content">
+       20     <h2>Кошик</h2>
+       21     <?php if (!empty(
+       22         $paid ?? false
+       23     )): ?>
+       24         <div style="color: green; font-weight: bold;">Оплата успішна! Дякуємо за покупку.</div>
+       25         <p><a href="index.php">Повернутися до магазину</a></p>
+       26     <?php elseif (empty($cart)): ?>
+       27         <p>Кошик порожній. <a href="products.php">Перейти до покупок</a></p>
+       28     <?php else: ?>
+       29         <table border="1" cellpadding="5">
+       30             <tr>
+       31                 <th>ID</th><th>Назва</th><th>Ціна</th><th>Кількість</th><th>Сума</th><th></th>
+       32             </tr>
+       33             <?php $total = 0; foreach ($cart as $item):
+       34                 $product = findProduct($item['id'], $products);
+       35                 if (!$product) continue;
+       36                 $sum = $product['price'] * $item['count'];
+       37                 $total += $sum;
+       38             ?>
+       39             <tr>
+       40                 <td><?= $product['id'] ?></td>
+       41                 <td><?= htmlspecialchars($product['name']) ?></td>
+       42                 <td>$<?= $product['price'] ?></td>
+       43                 <td><?= $item['count'] ?></td>
+       44                 <td>$<?= $sum ?></td>
+       45                 <td>
+       46                     <form method="post" name="remove" style="display: inline;">
+       47                         <input type="hidden" name="remove" value="<?= $product['id'] ?>">
+       48                         <button type="submit" class="remove-button">Видалити</button>
+       49                     </form>
+       50                 </td>
+       51             </tr>
+       52             <?php endforeach; ?>
+       53             <tr>
+       54                 <td colspan="4"><b>Разом до сплати:</b></td>
+       55                 <td colspan="2"><b>$<?= $total ?></b></td>
+       56             </tr>
+       57         </table>
+       58         <form method="post" name="pay">
+       59             <div class="button-center">
+       60             <button name="pay">Оплатити</button>
+       61         </div>
+       62         </form>
+       63     <?php endif; ?>
+       64 </div>
+       65 <?php include __DIR__ . '/includes/footer.php'; ?>
+
+Б.5 Файл style.css
+
+GitHub репозиторій: https://github.com/NureDrobyshevIvan/smp-pzpi-23-2-drobyshev-ivan/blob/main/Lab3/smp-pzpi-23-2-drobyshev-ivan-lab3/style.css
+
+        1 body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        2 header, footer { background: #f0f0f0; padding: 10px; }
+        3 nav a { margin: 0 10px; text-decoration: none; color: #333; }
+        4
+        5 table { margin: 20px 0; border-collapse: collapse; }
+        6 td, th { padding: 8px 12px; }
+        7 button { padding: 6px 16px; }
+        8
+        9 footer {
+       10     width: 100%;
+       11     background: #f8f8f8;
+       12     box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+       13     padding: 10px 0;
+       14     position: fixed;
+       15     bottom: 0;
+       16     left: 0;
+       17     z-index: 100;
+       18     text-align: center;
+       19 }
+       20
+       21 .footer-links {
+       22     display: inline-flex;
+       23     gap: 20px;
+       24     align-items: center;
+       25 }
+       26
+       27 .footer-links a {
+       28     color: #222;
+       29     text-decoration: none;
+       30     font-weight: bold;
+       31     font-size: 1em;
+       32     padding: 0 8px;
+       33     transition: color 0.2s;
+       34 }
+       35
+       36 .footer-links a:hover {
+       37     color: #007bff;
+       38 }
+       39
+       40 .footer-separator {
+       41     color: #aaa;
+       42     font-size: 1.1em;
+       43     user-select: none;
+       44 }
+       45
+       46 .main-content {
+       47     display: flex;
+       48     flex-direction: column;
+       49     align-items: center;
+       50     justify-content: center;
+       51     min-height: 70vh;
+       52 }
+       53
+       54 .button-center {
+       55     display: flex;
+       56     justify-content: center;
+       57     margin-top: 20px;
+       58 }
+       59
+       60 .button-center button {
+       61     background-color: #007bff;
+       62     color: #fff;
+       63     border: 1px solid #000;
+       64     border-radius: 5px;
+       65     padding: 10px 20px;
+       66     cursor: pointer;
+       67 }
+
+Б.6 Файл header.php
+
+GitHub репозиторій: https://github.com/NureDrobyshevIvan/smp-pzpi-23-2-drobyshev-ivan/blob/main/Lab3/smp-pzpi-23-2-drobyshev-ivan-lab3/includes/header.php
+
+        1 <header >
+        2 <link rel="stylesheet" href="style.css">
+        3 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        4     <nav style="display: flex; justify-content: space-between; align-items: center; margin: 0 auto; height: 30px; padding: 0%;">
+        5         <a href="index.php">
+        6             <i class="fas fa-home"></i> Home
+        7         </a> |
+        8         <a href="products.php">
+        9             <i class="fas fa-bars"></i> Products
+       10         </a> |
+       11         <a href="basket.php">
+       12             <i class="fas fa-shopping-cart"></i> Cart
+       13         </a>
+       14     </nav>
+       15     <hr>
+       16 </header>
+
+Б.7 Файл footer.php
+
+GitHub репозиторій: https://github.com/NureDrobyshevIvan/smp-pzpi-23-2-drobyshev-ivan/blob/main/Lab3/smp-pzpi-23-2-drobyshev-ivan-lab3/includes/footer.php
+
+        1 <footer>
+        2 <link rel="stylesheet" href="style.css">
+        3     <div class="footer-links">
+        4         <a href="index.php">Home</a>
+        5         <span class="footer-separator">|</span>
+        6         <a href="products.php">Products</a>
+        7         <span class="footer-separator">|</span>
+        8         <a href="basket.php">Cart</a>
+        9         <span class="footer-separator">|</span>
+       10         <a href="about.php">About Us</a>
+       11     </div>
+       12 </footer> 
+
+Б.8 Файл index.php
+
+GitHub репозиторій: https://github.com/NureDrobyshevIvan/smp-pzpi-23-2-drobyshev-ivan/blob/main/Lab3/smp-pzpi-23-2-drobyshev-ivan-lab3/index.php
+
+        1 <?php
+        2 include __DIR__ . '/includes/header.php';
+        3 ?>
+        4 <div class="main-content">
+        5     <h2>Вітаємо в нашому магазині!</h2>
+        6     <a href="products.php" style="font-size:1.2em; font-weight:bold; color:#007bff; text-decoration:underline;">Перейти до покупок</a>
+        7 </div>
+        8 <?php include __DIR__ . '/includes/footer.php'; ?>
+
+      
+
+
